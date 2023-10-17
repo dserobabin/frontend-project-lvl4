@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -10,6 +10,7 @@ import routes from '../routes';
 const Login = () => {
   const inputRef = useRef();
   const navigate = useNavigate();
+  const [authFailed, setAuthFailed] = useState(false);
 
   useEffect(() => {
     inputRef.current.focus();
@@ -27,12 +28,13 @@ const Login = () => {
         .required('Должно быть заполнено!'),
     }),
     onSubmit: async (values) => {
+      setAuthFailed(false);
       try {
         const res = await axios.post(routes.loginPath(), values);
         localStorage.setItem('user', JSON.stringify(res.data));
         navigate(routes.chat());
       } catch {
-        console.log('error');
+        setAuthFailed(true);
       }
     },
   });
@@ -54,8 +56,10 @@ const Login = () => {
                   <Form.Group className="form-floating mb-3">
                     <Form.Control
                       id="username"
+                      name="username"
                       onChange={formik.handleChange}
                       placeholder="Ваш ник"
+                      isInvalid={authFailed}
                       ref={inputRef}
                     />
                     <Form.Label htmlFor="username">Ваш ник</Form.Label>
@@ -63,10 +67,13 @@ const Login = () => {
                   <Form.Group className="form-floating mb-3">
                     <Form.Control
                       id="password"
+                      name="password"
                       onChange={formik.handleChange}
                       placeholder="Пароль"
+                      isInvalid={authFailed}
                     />
                     <Form.Label htmlFor="password">Пароль</Form.Label>
+                    <Form.Control.Feedback type="invalid">Неверное имя пользователя или пароль</Form.Control.Feedback>
                   </Form.Group>
                   <Button type="submit" variant="outline-primary" className="w-100 mb-3">Войти</Button>
                 </Form>
