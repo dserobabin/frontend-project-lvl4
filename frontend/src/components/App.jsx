@@ -7,8 +7,8 @@ import routes from '../routes.js';
 const App = () => (
   <BrowserRouter>
     <Routes>
-      <Route path={routes.ChatPath()} element={<Chat />} />
-      <Route path={routes.LoginPath()} element={<Login />} />
+      <Route path={routes.chat()} element={<Chat />} />
+      <Route path={routes.login()} element={<Login />} />
       <Route path="*" element={<Error />} />
     </Routes>
   </BrowserRouter>

@@ -1,15 +1,19 @@
 import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
 import login from '../assets/login.jpeg';
+import routes from '../routes';
 
 const Login = () => {
   const inputRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     inputRef.current.focus();
-  });
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -22,12 +26,17 @@ const Login = () => {
       password: Yup.string()
         .required('Должно быть заполнено!'),
     }),
-    onSubmit: (values) => {
-      console.log(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      try {
+        const res = await axios.post(routes.loginPath(), values);
+        localStorage.setItem('user', JSON.stringify(res.data));
+        navigate(routes.chat());
+      } catch {
+        console.log('error');
+      }
     },
   });
 
-  console.log(formik);
   return (
     <div className="container-fluid h-100">
       <div className="row justify-content-center align-items-center h-100">
@@ -41,10 +50,11 @@ const Login = () => {
               </div>
               <div className="col-12 col-md-6">
                 <h1 className="text-center mb-4">Войти</h1>
-                <Form>
+                <Form onSubmit={formik.handleSubmit}>
                   <Form.Group className="form-floating mb-3">
                     <Form.Control
                       id="username"
+                      onChange={formik.handleChange}
                       placeholder="Ваш ник"
                       ref={inputRef}
                     />
@@ -53,12 +63,13 @@ const Login = () => {
                   <Form.Group className="form-floating mb-3">
                     <Form.Control
                       id="password"
+                      onChange={formik.handleChange}
                       placeholder="Пароль"
                     />
                     <Form.Label htmlFor="password">Пароль</Form.Label>
                   </Form.Group>
+                  <Button type="submit" variant="outline-primary" className="w-100 mb-3">Войти</Button>
                 </Form>
-                <Button type="submit" variant="outline-primary" className="w-100 mb-3">Войти</Button>
               </div>
             </div>
             <div className="card-footer p-4">
