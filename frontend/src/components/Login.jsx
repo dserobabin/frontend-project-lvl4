@@ -6,8 +6,10 @@ import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
 import login from '../assets/login.jpeg';
 import routes from '../routes';
+import useAuth from '../hooks/index.js';
 
 const Login = () => {
+  const auth = useAuth();
   const inputRef = useRef();
   const navigate = useNavigate();
   const [authFailed, setAuthFailed] = useState(false);
@@ -31,7 +33,7 @@ const Login = () => {
       setAuthFailed(false);
       try {
         const res = await axios.post(routes.loginPath(), values);
-        localStorage.setItem('user', JSON.stringify(res.data));
+        auth.logIn(res.data);
         navigate(routes.chat());
       } catch {
         setAuthFailed(true);
