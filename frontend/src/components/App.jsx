@@ -17,7 +17,13 @@ const AuthProvider = ({ children }) => {
     setUser({ username: userData.username });
   };
 
-  const memoizedValue = useMemo(() => ({ logIn, user }), [user]);
+  const getAuthHeader = () => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+
+    return userData?.token ? { Authorization: `Bearer ${userData.token}` } : {};
+  };
+
+  const memoizedValue = useMemo(() => ({ logIn, user, getAuthHeader }), [user]);
   return (
     <AuthContext.Provider value={memoizedValue}>
       {children}
