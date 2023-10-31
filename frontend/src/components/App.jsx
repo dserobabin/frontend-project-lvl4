@@ -39,13 +39,15 @@ const PrivateRoute = () => {
 const App = () => (
   <AuthProvider>
     <BrowserRouter>
-      <Routes>
-        <Route path={routes.chat()} element={<PrivateRoute />}>
-          <Route path="" element={<Chat />} />
-        </Route>
-        <Route path={routes.login()} element={<Login />} />
-        <Route path="*" element={<Error />} />
-      </Routes>
+      <div className="d-flex flex-column h-100">
+        <Routes>
+          <Route path={routes.chat()} element={<PrivateRoute />}>
+            <Route path="" element={<Chat />} />
+          </Route>
+          <Route path={routes.login()} element={<Login />} />
+          <Route path="*" element={<Error />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   </AuthProvider>
 
