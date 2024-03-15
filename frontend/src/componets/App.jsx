@@ -5,11 +5,13 @@ import NotFoundPage from './NotFoundPage';
 
 const App = () => (
   <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<MainPage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <div className="d-flex flex-column h-100">
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </div>
   </BrowserRouter>
 );
 
