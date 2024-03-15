@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { io } from 'socket.io-client';
 import 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import init from './init';
 import reportWebVitals from './reportWebVitals';
 
-const app = () => {
+const app = async () => {
+  const socket = io();
+  const vdom = await init(socket);
   const root = ReactDOM.createRoot(document.getElementById('chat'));
-  const vdom = init();
   root.render(
     <React.StrictMode>
       {vdom}

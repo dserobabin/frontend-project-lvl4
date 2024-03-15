@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import NewMessageForm from './NewMessageForm.jsx';
 
 import { useGetMessagesQuery } from '../services/messagesApi.js';
 import { useGetChannelsQuery } from '../services/channelsApi.js';
@@ -38,7 +39,7 @@ const Chat = () => {
         ))}
       </div>
       <div className="mt-auto px-5 py-3">
-        New Message
+        <NewMessageForm channel={currentChannel} />
       </div>
     </div>
   );
