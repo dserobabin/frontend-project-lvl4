@@ -1,12 +1,18 @@
 import { Button, Form } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
+import { useLoginMutation } from '../services/authApi';
+import { actions as authActions } from '../slices/authSlice';
 import loginImage from '../assets/login.jpeg';
 
 const Login = () => {
   const [isValid, setIsValid] = useState(false);
+  const [login] = useLoginMutation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const inputRef = useRef();
   useEffect(() => {
     inputRef.current.focus();
@@ -24,9 +30,16 @@ const Login = () => {
       password: '',
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (credentials) => {
       setIsValid(false);
-      console.log(values);
+      try {
+        const user = await login(credentials).unwrap();
+        dispatch(authActions.setCredentials(user));
+        navigate('/');
+      } catch (err) {
+        setIsValid(true);
+        inputRef.current.select();
+      }
     },
   });
 
@@ -68,6 +81,7 @@ const Login = () => {
                     type="password"
                   />
                   <Form.Label htmlFor="password">Пароль</Form.Label>
+                  {isValid && <Form.Control.Feedback type="invalid" tooltip>Неверные имя пользователя или пароль</Form.Control.Feedback>}
                 </Form.Group>
                 <Button className="w-100 mb-3" type="submit" variant="outline-primary">Войти</Button>
               </Form>
