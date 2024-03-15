@@ -1,20 +1,40 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
+import { actions as currentChannelSlice } from '../slices/currentChannelSlice.js';
 
 import { useGetChannelsQuery } from '../services/channelsApi.js';
 
 const Channel = ({
   channel,
-}) => (
-  <li key={channel.id} className="nav-item w-100">
-    {channel.name}
-  </li>
-);
+  isCurrent,
+  handleChangeChannel,
+}) => {
+  const variant = isCurrent ? 'secondary' : null;
+  return (
+    <li key={channel.id} className="nav-item w-100">
+      <Button
+        type="button"
+        variant={variant}
+        key={channel.id}
+        className="w-100 rounded-0 text-start"
+        onClick={handleChangeChannel}
+      >
+        <span className="me-1">#</span>
+        {channel.name}
+      </Button>
+    </li>
+  );
+};
 
 const Channels = () => {
   const { data: channels } = useGetChannelsQuery();
   const { currentChannelId } = useSelector((state) => state.currentChannel);
+  const dispatch = useDispatch();
+
+  const handleChangeChannel = (channelId) => () => {
+    dispatch(currentChannelSlice.changeCurrentChannelId(channelId));
+  };
 
   return (
     <>
@@ -38,6 +58,7 @@ const Channels = () => {
             key={channel.id}
             isCurrent={channel.id === currentChannelId}
             channel={channel}
+            handleChangeChannel={handleChangeChannel(channel.id)}
           />
         ))}
       </ul>
