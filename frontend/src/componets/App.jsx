@@ -3,6 +3,7 @@ import Login from './Login';
 import MainPage from './MainPage';
 import NotFoundPage from './NotFoundPage';
 import PrivateOutlet from './PrivateOutlet';
+import SignUpPage from './SignUpPage';
 
 const App = () => (
   <BrowserRouter>
@@ -12,6 +13,7 @@ const App = () => (
           <Route path="" element={<MainPage />} />
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUpPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
