@@ -1,5 +1,6 @@
 import { Spinner } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer } from 'react-toastify';
 import Channels from './Channels';
 import Chat from './Chat';
 import { useGetChannelsQuery } from '../services/channelsApi.js';
@@ -26,6 +27,7 @@ const MainPage = () => {
           <div className="row h-100 bg-white flex-md-row">
             <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
               <Channels />
+              <ToastContainer />
             </div>
             <div className="col p-0 h-100">
               <Chat />

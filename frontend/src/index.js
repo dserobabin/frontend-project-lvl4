@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { io } from 'socket.io-client';
 import 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
 import init from './init';
 import reportWebVitals from './reportWebVitals';
 

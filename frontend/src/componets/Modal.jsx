@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import {
   Modal as BootstrapModal,
@@ -48,6 +49,7 @@ const AddChannelForm = ({ handleClose }) => {
       try {
         addChannel(channel);
         handleClose();
+        toast.success(t('channels.created'));
       } catch (e) {
         console.log(e);
         setSubmitting(false);
@@ -122,6 +124,7 @@ const RemoveChannelForm = ({ handleClose }) => {
     try {
       removeChannel(channelId);
       handleClose();
+      toast.success(t('channels.removed'));
     } catch (e) {
       setLoading(false);
     }
@@ -196,6 +199,7 @@ const RenameChannelForm = ({ handleClose }) => {
       try {
         changeChannelName(data);
         handleClose();
+        toast.success(t('modals.rename'));
       } catch (e) {
         setSubmitting(false);
         inputRef.current.select();
