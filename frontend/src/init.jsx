@@ -1,6 +1,7 @@
 import { Provider } from 'react-redux';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
+import leoProfanity from 'leo-profanity';
 import App from './componets/App';
 import store from './store';
 import { messagesApi } from './services/messagesApi';
@@ -9,6 +10,8 @@ import { actions as currentChannelSlice } from './slices/currentChannelSlice.js'
 import resources from './locales/index.js';
 
 const init = async (socket) => {
+  const ruDict = leoProfanity.getDictionary('ru');
+  leoProfanity.add(ruDict);
   const i18n = i18next.createInstance();
   await i18n
     .use(initReactI18next)

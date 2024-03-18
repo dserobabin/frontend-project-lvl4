@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import leoProfanity from 'leo-profanity';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Form, InputGroup, Button } from 'react-bootstrap';
@@ -25,8 +26,9 @@ const NewMessageForm = ({ channel }) => {
     initialValues: { body: '' },
     validationSchema,
     onSubmit: async ({ body }) => {
+      const filteredText = leoProfanity.clean(body);
       const message = {
-        body,
+        body: filteredText,
         channelId: channel.id,
         username,
       };

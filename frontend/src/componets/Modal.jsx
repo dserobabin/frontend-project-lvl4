@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import leoProfanity from 'leo-profanity';
 import { useTranslation } from 'react-i18next';
 import {
   Modal as BootstrapModal,
@@ -45,9 +46,9 @@ const AddChannelForm = ({ handleClose }) => {
     },
     validationSchema: getValidationSchema(channelNames),
     onSubmit: async ({ name }, { setSubmitting }) => {
-      const channel = { name };
+      const filteredName = leoProfanity.clean(name);
       try {
-        addChannel(channel);
+        addChannel(filteredName);
         handleClose();
         toast.success(t('channels.created'));
       } catch (e) {
@@ -195,7 +196,8 @@ const RenameChannelForm = ({ handleClose }) => {
     },
     validationSchema: getValidationSchema(selectedChannels),
     onSubmit: async ({ name }, { setSubmitting }) => {
-      const data = { name, id: channelId };
+      const filteredName = leoProfanity.clean(name);
+      const data = { name: filteredName, id: channelId };
       try {
         changeChannelName(data);
         handleClose();
