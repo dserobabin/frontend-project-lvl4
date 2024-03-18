@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { actions as currentChannelSlice } from '../slices/currentChannelSlice.js';
+import { actions as modalSlice } from '../slices/modalSlice.js';
 
 import { useGetChannelsQuery } from '../services/channelsApi.js';
 
@@ -35,6 +36,9 @@ const Channels = () => {
   const handleChangeChannel = (channelId) => () => {
     dispatch(currentChannelSlice.changeCurrentChannelId(channelId));
   };
+  const handleAddChannel = () => {
+    dispatch(modalSlice.openModal({ type: 'addChannel' }));
+  };
 
   return (
     <>
@@ -44,6 +48,7 @@ const Channels = () => {
           type="button"
           variant="group-vertical"
           className="p-0 text-primary"
+          onClick={handleAddChannel}
         >
           <PlusSquare size={20} />
           <span className="visually-hidden">+</span>
