@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { useSignUpMutation } from '../services/authApi';
 import signUpImage from '../assets/signup.jpg';
 
 const SignUp = () => {
+  const { t } = useTranslation();
   const [signUp] = useSignUpMutation();
   const [registrationFailed, setRegistrationFailed] = useState(false);
   const inputRef = useRef();
@@ -20,17 +22,17 @@ const SignUp = () => {
     username: yup
       .string()
       .trim()
-      .required('required')
-      .min(3, 'usernameConstraints')
-      .max(20, 'usernameConstraints'),
+      .required(t('signup.required'))
+      .min(3, t('signup.usernameConstraints'))
+      .max(20, t('signup.usernameConstraints')),
     password: yup
       .string()
       .trim()
-      .required('required')
-      .min(6, 'passMin'),
+      .required(t('signup.required'))
+      .min(6, t('signup.passMin')),
     confirmPassword: yup
       .string()
-      .test('confirmPassword', 'mustMatch', (value, context) => value === context.parent.password),
+      .test(t('signup.confirmPassword'), t('signup.mustMatch'), (value, context) => value === context.parent.password),
   });
 
   const formik = useFormik({
@@ -62,17 +64,17 @@ const SignUp = () => {
                 <img
                   src={signUpImage}
                   className="rounded-circle"
-                  alt="hearer"
+                  alt={t('signup.header')}
                 />
               </div>
               <Form onSubmit={formik.handleSubmit} className="w-50">
-                <h1 className="text-center mb-4">Регистрация</h1>
+                <h1 className="text-center mb-4">{t('signup.header')}</h1>
                 <Form.Group className="form-floating mb-3">
                   <Form.Control
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.username}
-                    placeholder="имя пользователя"
+                    placeholder={t('signup.usernameConstraints')}
                     name="username"
                     id="username"
                     autoComplete="username"
@@ -83,7 +85,7 @@ const SignUp = () => {
                     required
                     ref={inputRef}
                   />
-                  <Form.Label htmlFor="username">Пользователь</Form.Label>
+                  <Form.Label htmlFor="username">{t('signup.username')}</Form.Label>
                   <Form.Control.Feedback type="invalid" tooltip placement="right">
                     {(formik.errors.username)}
                   </Form.Control.Feedback>
@@ -94,7 +96,7 @@ const SignUp = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.password}
-                    placeholder="пароль"
+                    placeholder={t('signup.passMin')}
                     name="password"
                     id="password"
                     aria-describedby="passwordHelpBlock"
@@ -108,7 +110,7 @@ const SignUp = () => {
                   <Form.Control.Feedback type="invalid" tooltip>
                     {formik.errors.password}
                   </Form.Control.Feedback>
-                  <Form.Label htmlFor="password">Пароль</Form.Label>
+                  <Form.Label htmlFor="password">{t('signup.password')}</Form.Label>
                 </Form.Group>
                 <Form.Group className="form-floating mb-4">
                   <Form.Control
@@ -116,7 +118,7 @@ const SignUp = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.confirmPassword}
-                    placeholder="повторите пароль"
+                    placeholder={t('signup.mustMatch')}
                     name="confirmPassword"
                     id="confirmPassword"
                     isInvalid={
@@ -131,10 +133,10 @@ const SignUp = () => {
                       ? ('signup.alreadyExists')
                       : (formik.errors.confirmPassword)}
                   </Form.Control.Feedback>
-                  <Form.Label htmlFor="confirmPassword">Подтвердить</Form.Label>
+                  <Form.Label htmlFor="confirmPassword">{t('signup.confirm')}</Form.Label>
 
                 </Form.Group>
-                <Button type="submit" variant="outline-primary" className="w-100">Подтвердить</Button>
+                <Button type="submit" variant="outline-primary" className="w-100">{t('singup.submit')}</Button>
               </Form>
             </div>
           </div>

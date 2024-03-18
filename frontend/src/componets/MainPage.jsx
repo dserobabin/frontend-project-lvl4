@@ -1,4 +1,5 @@
 import { Spinner } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import Channels from './Channels';
 import Chat from './Chat';
 import { useGetChannelsQuery } from '../services/channelsApi.js';
@@ -8,12 +9,12 @@ import Modal from './Modal.jsx';
 const MainPage = () => {
   const { isLoading: isChannelsLoading } = useGetChannelsQuery();
   const { isLoading: isMessagesLoading } = useGetMessagesQuery();
-
+  const { t } = useTranslation();
   return isChannelsLoading || isMessagesLoading
     ? (
       <div className="h-100 d-flex justify-content-center align-items-center">
         <Spinner animation="border" role="status" variant="primary">
-          <span className="visually-hidden">Загрузка</span>
+          <span className="visually-hidden">{t('loading')}</span>
         </Spinner>
       </div>
 

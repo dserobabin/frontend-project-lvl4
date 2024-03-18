@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Modal as BootstrapModal,
   Form,
@@ -16,21 +17,22 @@ import {
 
 import { actions as modalSlice } from '../slices/modalSlice';
 
-const getValidationSchema = (channels) => yup.object().shape({
-  name: yup
-    .string()
-    .trim()
-    .required('Required')
-    .min(3, 'min')
-    .max(20, 'max')
-    .notOneOf(channels, 'uniq'),
-});
-
 const AddChannelForm = ({ handleClose }) => {
+  const { t } = useTranslation();
   const { data: channels } = useGetChannelsQuery();
   const channelNames = channels.map((channel) => channel.name);
   const inputRef = useRef(null);
   const [addChannel] = useAddChannelMutation();
+
+  const getValidationSchema = (ch) => yup.object().shape({
+    name: yup
+      .string()
+      .trim()
+      .required(t('modals.required'))
+      .min(3, t('modals.min'))
+      .max(20, t('modals.max'))
+      .notOneOf(ch, t('modals.uniq')),
+  });
 
   useEffect(() => {
     inputRef.current.focus();
@@ -59,7 +61,7 @@ const AddChannelForm = ({ handleClose }) => {
   return (
     <>
       <BootstrapModal.Header>
-        <BootstrapModal.Title>Добавить</BootstrapModal.Title>
+        <BootstrapModal.Title>{t('modals.add')}</BootstrapModal.Title>
         <Button
           variant="close"
           type="button"
@@ -82,7 +84,7 @@ const AddChannelForm = ({ handleClose }) => {
               name="name"
               id="name"
             />
-            <Form.Label className="visually-hidden" htmlFor="name">Добавление канала</Form.Label>
+            <Form.Label className="visually-hidden" htmlFor="name">{t('modals.channelName')}</Form.Label>
             <Form.Control.Feedback type="invalid">
               {formik.errors.name}
             </Form.Control.Feedback>
@@ -93,14 +95,14 @@ const AddChannelForm = ({ handleClose }) => {
                 type="button"
                 onClick={handleClose}
               >
-                Отменить
+                {t('modals.cancel')}
               </Button>
               <Button
                 variant="primary"
                 type="submit"
                 disabled={formik.isSubmitting}
               >
-                Отправить
+                {t('modals.submit')}
               </Button>
             </div>
           </Form.Group>
@@ -110,6 +112,7 @@ const AddChannelForm = ({ handleClose }) => {
   );
 };
 const RemoveChannelForm = ({ handleClose }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [removeChannel] = useRemoveChannelMutation();
 
@@ -127,7 +130,7 @@ const RemoveChannelForm = ({ handleClose }) => {
   return (
     <>
       <BootstrapModal.Header>
-        <BootstrapModal.Title>Удаление</BootstrapModal.Title>
+        <BootstrapModal.Title>{t('modals.remove')}</BootstrapModal.Title>
         <Button
           variant="close"
           type="button"
@@ -137,7 +140,7 @@ const RemoveChannelForm = ({ handleClose }) => {
         />
       </BootstrapModal.Header>
       <BootstrapModal.Body>
-        <p className="lead">Отправить</p>
+        <p className="lead">{t('modals.confirmation')}</p>
         <div className="d-flex justify-content-end">
           <Button
             className="me-2"
@@ -146,7 +149,7 @@ const RemoveChannelForm = ({ handleClose }) => {
             onClick={handleClose}
             disabled={loading}
           >
-            Отменить
+            {t('modals.cancel')}
           </Button>
           <Button
             variant="danger"
@@ -154,7 +157,7 @@ const RemoveChannelForm = ({ handleClose }) => {
             onClick={handleRemove}
             disabled={loading}
           >
-            Отправить
+            {t('modals.confirm')}
           </Button>
         </div>
       </BootstrapModal.Body>
@@ -163,12 +166,23 @@ const RemoveChannelForm = ({ handleClose }) => {
 };
 
 const RenameChannelForm = ({ handleClose }) => {
+  const { t } = useTranslation();
   const { data: channels } = useGetChannelsQuery(undefined);
   const [changeChannelName] = useChangeChannelNameMutation();
   const selectedChannels = channels.map((channel) => channel.name);
   const channelId = useSelector((state) => state.modal.extra?.channelId);
   const channel = channels.find((el) => channelId === el.id);
   const inputRef = useRef(null);
+
+  const getValidationSchema = (ch) => yup.object().shape({
+    name: yup
+      .string()
+      .trim()
+      .required(t('modals.required'))
+      .min(3, t('modals.min'))
+      .max(20, t('modals.max'))
+      .notOneOf(ch, t('modals.uniq')),
+  });
   useEffect(() => {
     setTimeout(() => inputRef.current.select());
   }, []);
@@ -197,7 +211,7 @@ const RenameChannelForm = ({ handleClose }) => {
   return (
     <>
       <BootstrapModal.Header>
-        <BootstrapModal.Title>Переименование</BootstrapModal.Title>
+        <BootstrapModal.Title>{t('modals.rename')}</BootstrapModal.Title>
         <Button
           variant="close"
           type="button"
@@ -231,14 +245,14 @@ const RenameChannelForm = ({ handleClose }) => {
                 type="button"
                 onClick={handleClose}
               >
-                Отмена
+                {t('modals.cancel')}
               </Button>
               <Button
                 variant="primary"
                 type="submit"
                 disabled={f.isSubmitting}
               >
-                Подтвердить
+                {t('modals.confirm')}
               </Button>
             </div>
           </Form.Group>

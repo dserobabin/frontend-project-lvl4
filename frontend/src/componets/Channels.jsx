@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
+import { useTranslation } from 'react-i18next';
 import { actions as currentChannelSlice } from '../slices/currentChannelSlice.js';
 import { actions as modalSlice } from '../slices/modalSlice.js';
 
@@ -13,6 +14,7 @@ const Channel = ({
   handleRenameChannel,
   isCurrent,
 }) => {
+  const { t } = useTranslation();
   const variant = isCurrent ? 'secondary' : null;
   return (
     <li key={channel.id} className="nav-item w-100">
@@ -30,11 +32,11 @@ const Channel = ({
               {channel.name}
             </Button>
             <Dropdown.Toggle split className="flex-grow-0" variant={variant}>
-              <span className="visually-hidden">Каналы</span>
+              <span className="visually-hidden">{t('channels.menu')}</span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item onClick={handleRemoveChannel(channel.id)}>Удалить</Dropdown.Item>
-              <Dropdown.Item onClick={handleRenameChannel(channel.id)}>Переименовать</Dropdown.Item>
+              <Dropdown.Item onClick={handleRemoveChannel(channel.id)}>{t('channels.remove')}</Dropdown.Item>
+              <Dropdown.Item onClick={handleRenameChannel(channel.id)}>{t('channels.rename')}</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         )

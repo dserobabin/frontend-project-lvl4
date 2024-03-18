@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import NewMessageForm from './NewMessageForm.jsx';
 
 import { useGetMessagesQuery } from '../services/messagesApi.js';
@@ -18,6 +19,7 @@ const Chat = () => {
   const { currentChannelId } = useSelector((state) => state.currentChannel);
   const currentChannel = channels.find((el) => el.id === currentChannelId);
   const currentMessages = messages.filter((el) => el.channelId === currentChannelId);
+  const { t } = useTranslation();
 
   return (
     <div className="d-flex flex-column h-100">
@@ -26,7 +28,7 @@ const Chat = () => {
           <b>{`# ${currentChannel.name}`}</b>
         </p>
         <span className="text-muted">
-          {`${currentMessages.length} сообщений`}
+          {`${currentMessages.length} ${t('chat.messageCount', { count: currentMessages.length })}`}
         </span>
       </div>
       <div id="messages" className="chat-messages overflow-auto px-5">
