@@ -13,6 +13,10 @@ const authSlice = createSlice({
       state.user.username = payload.username;
       state.user.token = payload.token;
     },
+    removeCredentials: (state) => {
+      localStorage.removeItem('user');
+      state.user = {};
+    },
   },
 });
 
