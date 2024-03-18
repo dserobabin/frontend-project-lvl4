@@ -11,11 +11,26 @@ const init = async (socket) => {
       draftMessages.push(payload);
     }));
   });
-
   socket.on('newChannel', (payload) => {
     store.dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (draftChannels) => {
       draftChannels.push(payload);
       store.dispatch(currentChannelSlice.changeCurrentChannelId(payload.id));
+    }));
+  });
+  socket.on('removeChannel', (payload) => {
+    store.dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (draftChannels) => {
+      const filteredChannels = draftChannels.filter((channel) => channel.id !== payload.id);
+      const state = store.getState();
+      if (state.currentChannel.currentChannelId === payload.id) {
+        store.dispatch(currentChannelSlice.changeCurrentChannelId('1'));
+      }
+      return filteredChannels;
+    }));
+  });
+  socket.on('renameChannel', (payload) => {
+    store.dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (draftChannels) => {
+      const channel = draftChannels.find((item) => item.id === payload.id);
+      channel.name = payload.name;
     }));
   });
 

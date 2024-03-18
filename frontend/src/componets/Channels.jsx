@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { Button } from 'react-bootstrap';
+import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { actions as currentChannelSlice } from '../slices/currentChannelSlice.js';
 import { actions as modalSlice } from '../slices/modalSlice.js';
@@ -8,22 +8,48 @@ import { useGetChannelsQuery } from '../services/channelsApi.js';
 
 const Channel = ({
   channel,
-  isCurrent,
   handleChangeChannel,
+  handleRemoveChannel,
+  handleRenameChannel,
+  isCurrent,
 }) => {
   const variant = isCurrent ? 'secondary' : null;
   return (
     <li key={channel.id} className="nav-item w-100">
-      <Button
-        type="button"
-        variant={variant}
-        key={channel.id}
-        className="w-100 rounded-0 text-start"
-        onClick={handleChangeChannel}
-      >
-        <span className="me-1">#</span>
-        {channel.name}
-      </Button>
+      {channel.removable
+        ? (
+          <Dropdown as={ButtonGroup} className="d-flex">
+            <Button
+              type="button"
+              key={channel.id}
+              className="w-100 rounded-0 text-start text-truncate"
+              onClick={handleChangeChannel}
+              variant={variant}
+            >
+              <span className="me-1">#</span>
+              {channel.name}
+            </Button>
+            <Dropdown.Toggle split className="flex-grow-0" variant={variant}>
+              <span className="visually-hidden">Каналы</span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={handleRemoveChannel(channel.id)}>Удалить</Dropdown.Item>
+              <Dropdown.Item onClick={handleRenameChannel(channel.id)}>Переименовать</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        )
+        : (
+          <Button
+            type="button"
+            variant={variant}
+            key={channel.id}
+            className="w-100 rounded-0 text-start"
+            onClick={handleChangeChannel}
+          >
+            <span className="me-1">#</span>
+            {channel.name}
+          </Button>
+        )}
     </li>
   );
 };
@@ -38,6 +64,12 @@ const Channels = () => {
   };
   const handleAddChannel = () => {
     dispatch(modalSlice.openModal({ type: 'addChannel' }));
+  };
+  const handleRemoveChannel = (channelId) => () => {
+    dispatch(modalSlice.openModal({ type: 'removeChannel', extra: { channelId } }));
+  };
+  const handleRenameChannel = (channelId) => () => {
+    dispatch(modalSlice.openModal({ type: 'renameChannel', extra: { channelId } }));
   };
 
   return (
@@ -64,6 +96,8 @@ const Channels = () => {
             isCurrent={channel.id === currentChannelId}
             channel={channel}
             handleChangeChannel={handleChangeChannel(channel.id)}
+            handleRemoveChannel={handleRemoveChannel}
+            handleRenameChannel={handleRenameChannel}
           />
         ))}
       </ul>
